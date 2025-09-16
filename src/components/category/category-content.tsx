@@ -6,6 +6,9 @@ import Link from "next/link";
 import { ImplementationCard } from "@/components/implementation/implementation-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
+import { ShootingStars } from "@/components/ui/shooting-stars";
+import { StarsBackground } from "@/components/ui/stars-background";
 import { getCategoryBySlug } from "@/lib/queries";
 
 interface CategoryContentProps {
@@ -42,14 +45,14 @@ export function CategoryContent({ slug }: CategoryContentProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
-      <nav className="mb-8">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Link>
-        </Button>
-      </nav>
+      <div className="mb-8">
+        <CustomBreadcrumb
+          items={[
+            { label: "Categories", href: "/categories" },
+            { label: category.name },
+          ]}
+        />
+      </div>
 
       {/* Category Header */}
       <header className="mb-12">
@@ -80,22 +83,29 @@ export function CategoryContent({ slug }: CategoryContentProps) {
       {stateOfArt && (
         <section className="mb-12">
           <div className="flex items-center space-x-2 mb-6">
-            <Crown className="h-6 w-6 text-yellow-500" />
+            <Crown className="h-6 w-6 text-primary" />
             <h2 className="text-2xl font-bold">Current State Of The Art</h2>
           </div>
-          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/20 rounded-lg p-6">
-            <div className="flex items-start justify-between mb-4">
+          <div className="relative bg-black/90 border border-zinc-800 rounded-lg p-8 overflow-hidden">
+            <StarsBackground />
+            <ShootingStars />
+            <div className="relative z-10 flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-2xl font-bold mb-2 text-white">
                   {stateOfArt.name}
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-muted-foreground mb-6 text-lg">
                   {stateOfArt.description}
                 </p>
                 {(stateOfArt.website || stateOfArt.githubUrl) && (
                   <div className="flex space-x-3">
                     {stateOfArt.website && (
-                      <Button variant="outline" size="sm" asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        asChild
+                      >
                         <a
                           href={stateOfArt.website}
                           target="_blank"
@@ -106,7 +116,12 @@ export function CategoryContent({ slug }: CategoryContentProps) {
                       </Button>
                     )}
                     {stateOfArt.githubUrl && (
-                      <Button variant="outline" size="sm" asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        asChild
+                      >
                         <a
                           href={stateOfArt.githubUrl}
                           target="_blank"
@@ -120,10 +135,10 @@ export function CategoryContent({ slug }: CategoryContentProps) {
                 )}
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold text-yellow-600">
+                <div className="text-3xl font-bold text-primary">
                   {stateOfArt._count.votes} votes
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-zinc-400">
                   {stateOfArt._count.comments} comments
                 </div>
               </div>

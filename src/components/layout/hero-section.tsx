@@ -4,7 +4,8 @@ import { Search, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { Highlight } from "@/components/ui/hero-highlight";
 import { Input } from "@/components/ui/input";
 
 export function HeroSection() {
@@ -19,11 +20,12 @@ export function HeroSection() {
   };
 
   return (
-    <HeroHighlight className="py-20">
-      <div className="container mx-auto px-4 text-center">
+    <div className="relative py-20 overflow-hidden bg-card/30">
+      <BackgroundRippleEffect />
+      <div className="w-full px-4 text-center relative z-10">
         <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">
           Discover the{" "}
-          <Highlight className="text-black dark:text-white">
+          <Highlight className="bg-gradient-to-r from-primary to-primary/70 dark:from-primary dark:to-primary/80">
             State Of The Art
           </Highlight>{" "}
           in Technology
@@ -67,6 +69,6 @@ export function HeroSection() {
           </Button>
         </div>
       </div>
-    </HeroHighlight>
+    </div>
   );
 }

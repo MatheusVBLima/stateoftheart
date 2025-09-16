@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CategoryCard } from "@/components/category/category-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -62,6 +63,11 @@ export function CategoriesContent() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumbs */}
+      <div className="mb-6">
+        <CustomBreadcrumb />
+      </div>
+
       {/* Header */}
       <header className="mb-12">
         <div className="flex flex-col space-y-4">

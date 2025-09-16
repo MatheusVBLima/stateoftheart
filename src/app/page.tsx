@@ -22,7 +22,7 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SkipLinks />
       <Header />
       <main id="main-content">

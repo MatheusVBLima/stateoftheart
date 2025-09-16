@@ -8,6 +8,7 @@ import { FilterBar } from "@/components/filters/filter-bar";
 import { ImplementationCard } from "@/components/implementation/implementation-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import type { ImplementationFilters } from "@/lib/queries";
 
 interface ImplementationsContentProps {
@@ -68,6 +69,11 @@ export function ImplementationsContent({
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumbs */}
+      <div className="mb-6">
+        <CustomBreadcrumb />
+      </div>
+
       {/* Header */}
       <header className="mb-12">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">

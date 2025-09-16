@@ -6,6 +6,7 @@ import { Search, Sparkles, Filter, ArrowRight, ExternalLink, X, Eye } from "luci
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import MultipleSelector, { Option } from "@/components/ui/multiselect";
 import { ImplementationCard } from "@/components/implementation/implementation-card";
@@ -107,6 +108,11 @@ export function StackFilterContent() {
       <div className={`${selectedImplementation ? 'grid grid-cols-1 lg:grid-cols-2 gap-8' : ''}`}>
         {/* Main Content */}
         <div className={`${selectedImplementation ? 'min-w-0' : ''}`}>
+          {/* Breadcrumbs */}
+          <div className="mb-6">
+            <CustomBreadcrumb />
+          </div>
+
           {/* Header */}
           <header className="mb-12">
         <div className="max-w-4xl mx-auto text-center space-y-6">

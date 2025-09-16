@@ -3,13 +3,14 @@
 import { useUser } from "@clerk/nextjs";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { Calendar, Edit, ExternalLink, Github, Tag } from "lucide-react";
+import { Calendar, Edit, ExternalLink, Github, Tag, ThumbsUp, ThumbsDown } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CommentsSection } from "@/components/comments/comments-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import {
   Card,
   CardContent,
@@ -48,21 +49,14 @@ export function ImplementationContent({ slug }: ImplementationContentProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
-      <nav className="mb-8">
-        <div className="flex items-center space-x-2 text-sm">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/">Home</Link>
-          </Button>
-          <span className="text-muted-foreground">/</span>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={`/category/${implementation.category.slug}`}>
-              {implementation.category.name}
-            </Link>
-          </Button>
-          <span className="text-muted-foreground">/</span>
-          <span className="font-medium">{implementation.name}</span>
-        </div>
-      </nav>
+      <div className="mb-8">
+        <CustomBreadcrumb
+          items={[
+            { label: implementation.category.name, href: `/category/${implementation.category.slug}` },
+            { label: implementation.name }
+          ]}
+        />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
@@ -180,11 +174,22 @@ export function ImplementationContent({ slug }: ImplementationContentProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold">
+              <div className="text-center space-y-2">
+                <div className="text-2xl font-bold text-primary">
                   {implementation._count.votes}
                 </div>
-                <div className="text-sm text-muted-foreground">total votes</div>
+                <div className="text-sm text-muted-foreground">popularity score</div>
+
+                <div className="flex items-center justify-center space-x-4 text-sm">
+                  <div className="flex items-center space-x-1 text-green-600">
+                    <ThumbsUp className="h-4 w-4" />
+                    <span className="font-medium">{implementation.upvotes}</span>
+                  </div>
+                  <div className="flex items-center space-x-1 text-red-600">
+                    <ThumbsDown className="h-4 w-4" />
+                    <span className="font-medium">{implementation.downvotes}</span>
+                  </div>
+                </div>
               </div>
 
               <VotingButtons
@@ -203,9 +208,21 @@ export function ImplementationContent({ slug }: ImplementationContentProps) {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Total votes:</span>
-                <span className="font-semibold">
+                <span className="text-sm">Popularity score:</span>
+                <span className="font-semibold text-primary">
                   {implementation._count.votes}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-green-600">Upvotes:</span>
+                <span className="font-semibold text-green-600">
+                  {implementation.upvotes}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-red-600">Downvotes:</span>
+                <span className="font-semibold text-red-600">
+                  {implementation.downvotes}
                 </span>
               </div>
               <div className="flex justify-between items-center">

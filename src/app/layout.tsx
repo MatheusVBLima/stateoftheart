@@ -110,7 +110,7 @@ export default function RootLayout({
             <StructuredData data={websiteSchema} />
             <StructuredData data={webApplicationSchema} />
             <QueryProvider>{children}</QueryProvider>
-            <Toaster position="top-right" expand={true} richColors />
+            <Toaster position="bottom-right" expand={true} richColors />
           </ThemeProvider>
         </body>
       </html>

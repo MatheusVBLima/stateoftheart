@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ImplementationCard } from "@/components/implementation/implementation-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import {
   Card,
   CardContent,
@@ -88,6 +89,11 @@ export function TrendingContent() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumbs */}
+      <div className="mb-6">
+        <CustomBreadcrumb />
+      </div>
+
       {/* Header */}
       <header className="mb-12">
         <div className="max-w-3xl mx-auto text-center space-y-6">

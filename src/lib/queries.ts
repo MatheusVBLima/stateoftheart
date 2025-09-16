@@ -129,6 +129,22 @@ export async function getImplementationBySlug(slug: string, userId?: string) {
 
   if (!implementation) return null;
 
+  // Get separate upvotes and downvotes counts
+  const [upvotes, downvotes] = await Promise.all([
+    db.vote.count({
+      where: {
+        implementationId: implementation.id,
+        type: 'UP',
+      },
+    }),
+    db.vote.count({
+      where: {
+        implementationId: implementation.id,
+        type: 'DOWN',
+      },
+    }),
+  ]);
+
   // Transform dates to strings for serialization
   const transformComments = (comments: any[]): any[] => {
     return comments.map((comment) => ({
@@ -149,8 +165,14 @@ export async function getImplementationBySlug(slug: string, userId?: string) {
       createdAt: implementation.category.createdAt.toISOString(),
       updatedAt: implementation.category.updatedAt.toISOString(),
     },
-    _count: implementation._count,
+    _count: {
+      ...implementation._count,
+      votes: upvotes - downvotes, // Net score
+    },
     votes: implementation.votes,
+    upvotes,
+    downvotes,
+    popularityScore: upvotes - downvotes,
   };
 }
 
@@ -287,9 +309,9 @@ export async function getFeaturedImplementations(limit = 6) {
 }
 
 export async function getTrendingImplementations(limit = 10) {
-  // Get implementations with their vote scores from the last 30 days
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  // Get implementations with their vote scores from the last 7 days for more recent activity
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
   return db.implementation
     .findMany({
@@ -303,7 +325,7 @@ export async function getTrendingImplementations(limit = 10) {
         votes: {
           where: {
             createdAt: {
-              gte: thirtyDaysAgo,
+              gte: sevenDaysAgo,
             },
           },
         },
@@ -326,9 +348,13 @@ export async function getTrendingImplementations(limit = 10) {
         const score = recentUpvotes - recentDownvotes;
         const totalRecentVotes = recentUpvotes + recentDownvotes;
 
-        // Trending score: (score * recent_activity) + total_vote_count
-        const trendingScore =
-          score * Math.min(totalRecentVotes, 10) + impl._count.votes;
+        // Trending algorithm: prioritize recent activity over total votes
+        // Base score from recent activity, boosted by total engagement
+        const activityMultiplier = Math.min(totalRecentVotes / 10, 3); // Cap at 3x
+        const baseScore = score * (1 + activityMultiplier);
+        const totalVoteBonus = Math.log(impl._count.votes + 1) * 5; // Logarithmic bonus
+
+        const trendingScore = baseScore + totalVoteBonus + impl._count.comments * 2;
 
         return {
           ...impl,
@@ -379,6 +405,11 @@ export async function getPopularImplementations(limit = 10) {
           popularityScore: score,
           upvotes,
           downvotes,
+          // Override _count.votes with the popularity score for UI consistency
+          _count: {
+            ...impl._count,
+            votes: score, // Show net score instead of total votes
+          },
         };
       });
 
@@ -535,7 +566,7 @@ export async function getVoteCounts(implementationId: string) {
   };
 }
 
-// Get State of the Art implementations (100+ net votes) grouped by category
+// Get State of the Art implementations (top 1 per category) grouped by category
 export async function getStateOfTheArtByCategory() {
   // Get all implementations with their votes
   const implementations = await db.implementation.findMany({
@@ -556,13 +587,12 @@ export async function getStateOfTheArtByCategory() {
     },
   });
 
-  // Calculate net votes and filter State of the Art
-  const stateOfTheArtImplementations = implementations
+  // Calculate net votes for all implementations
+  const implementationsWithVotes = implementations
     .map((impl) => {
       const upvotes = impl.votes.filter((v) => v.type === "UP").length;
       const downvotes = impl.votes.filter((v) => v.type === "DOWN").length;
       const netVotes = upvotes - downvotes;
-      const isStateOfTheArt = netVotes >= 100;
 
       return {
         ...impl,
@@ -570,13 +600,11 @@ export async function getStateOfTheArtByCategory() {
         netVotes,
         upvotes,
         downvotes,
-        isStateOfTheArt,
       };
-    })
-    .filter((impl) => impl.isStateOfTheArt);
+    });
 
-  // Group by category
-  const groupedByCategory = stateOfTheArtImplementations.reduce((acc, impl) => {
+  // Group by category and get only the top 1 (State of the Art) per category
+  const groupedByCategory = implementationsWithVotes.reduce((acc, impl) => {
     const categoryName = impl.category.name;
     if (!acc[categoryName]) {
       acc[categoryName] = {
@@ -588,11 +616,16 @@ export async function getStateOfTheArtByCategory() {
     return acc;
   }, {} as Record<string, { category: any; implementations: any[] }>);
 
-  // Convert to array and sort implementations within each category
-  const result = Object.values(groupedByCategory).map((group) => ({
-    ...group,
-    implementations: group.implementations.sort((a, b) => b.netVotes - a.netVotes),
-  }));
+  // Get only the top implementation per category (State of the Art)
+  const result = Object.values(groupedByCategory)
+    .map((group) => ({
+      ...group,
+      implementations: group.implementations
+        .sort((a, b) => b.netVotes - a.netVotes)
+        .slice(0, 1) // Only take the #1 (State of the Art)
+        .filter(impl => impl.netVotes > 0) // Only include if it has positive votes
+    }))
+    .filter(group => group.implementations.length > 0); // Only include categories that have a winner
 
   // Sort categories by name
   return result.sort((a, b) => a.category.name.localeCompare(b.category.name));
