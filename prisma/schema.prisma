@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum VoteType {
+  UP
+  DOWN
+}
+
+model Category {
+  id              String @id @default(cuid())
+  name            String @unique
+  slug            String @unique
+  description     String
+  implementations Implementation[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Implementation {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique
+  description String
+  content     String? // Rich text content explaining why this is state-of-the-art
+  website     String?
+  githubUrl   String?
+  logoUrl     String?
+  userId      String
+  votes       Vote[]
+  comments    Comment[]
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tags        ImplementationTag[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("implementations")
+}
+
+model Vote {
+  id               String @id @default(cuid())
+  userId           String
+  implementationId String
+  type             VoteType
+  implementation   Implementation @relation(fields: [implementationId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+
+  @@unique([userId, implementationId])
+  @@map("votes")
+}
+
+model Comment {
+  id               String @id @default(cuid())
+  content          String
+  userId           String
+  implementationId String
+  parentId         String?
+  isHidden         Boolean @default(false)
+  reportCount      Int @default(0)
+  implementation   Implementation @relation(fields: [implementationId], references: [id], onDelete: Cascade)
+  parent           Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies          Comment[] @relation("CommentReplies")
+  reports          CommentReport[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model CommentReport {
+  id        String @id @default(cuid())
+  commentId String
+  userId    String
+  reason    String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, userId])
+  @@map("comment_reports")
+}
+
+model Tag {
+  id              String @id @default(cuid())
+  name            String @unique
+  slug            String @unique
+  description     String?
+  color           String? // Optional hex color for visual styling
+  implementations ImplementationTag[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("tags")
+}
+
+model ImplementationTag {
+  id               String @id @default(cuid())
+  implementationId String
+  tagId            String
+  implementation   Implementation @relation(fields: [implementationId], references: [id], onDelete: Cascade)
+  tag              Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+
+  @@unique([implementationId, tagId])
+  @@map("implementation_tags")
+}

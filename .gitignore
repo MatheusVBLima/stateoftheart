@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# database
+*.db
+*.db-journal
+/prisma/dev.db*
+/prisma/migrations/migration_lock.toml
 
 # vercel
 .vercel
@@ -39,3 +46,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated files
+/src/generated/prisma
+
+# playwright
+/.playwright-mcp
+
+# Claude
+CLAUDE.md 
+TODO.md
+.claude
+
+#doc
+bugs.md
+
+# code rabbit
+rabbit.md
+
+# scripts
+scripts/
