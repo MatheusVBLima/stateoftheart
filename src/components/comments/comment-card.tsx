@@ -32,6 +32,7 @@ import {
   editCommentAction,
   reportCommentAction,
 } from "@/lib/actions";
+import { renderTextWithCode } from "@/lib/text-renderer";
 
 interface Comment {
   id: string;
@@ -198,11 +199,15 @@ export function CommentCard({
             <div className="flex items-center space-x-3">
               <Avatar className="h-8 w-8">
                 <AvatarImage
-                  src={isOwner ? user?.imageUrl : `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.userId}`}
+                  src={
+                    isOwner
+                      ? user?.imageUrl
+                      : `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.userId}`
+                  }
                 />
                 <AvatarFallback>
                   {isOwner && user?.firstName ? (
-                    `${user.firstName[0]}${user.lastName?.[0] || ''}`
+                    `${user.firstName[0]}${user.lastName?.[0] || ""}`
                   ) : (
                     <User className="h-4 w-4" />
                   )}
@@ -210,7 +215,11 @@ export function CommentCard({
               </Avatar>
               <div className="flex-1">
                 <p className="text-sm font-medium">
-                  {isOwner ? user?.fullName || user?.firstName || getUserDisplayName(comment.userId) : getUserDisplayName(comment.userId)}
+                  {isOwner
+                    ? user?.fullName ||
+                      user?.firstName ||
+                      getUserDisplayName(comment.userId)
+                    : getUserDisplayName(comment.userId)}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {formatDistanceToNow(new Date(comment.createdAt), {
@@ -263,7 +272,9 @@ export function CommentCard({
                   </div>
                 </div>
               ) : (
-                <p className="whitespace-pre-wrap">{comment.content}</p>
+                <div className="prose prose-gray dark:prose-invert max-w-none">
+                  {renderTextWithCode(comment.content)}
+                </div>
               )}
             </div>
 

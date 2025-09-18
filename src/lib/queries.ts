@@ -134,13 +134,13 @@ export async function getImplementationBySlug(slug: string, userId?: string) {
     db.vote.count({
       where: {
         implementationId: implementation.id,
-        type: 'UP',
+        type: "UP",
       },
     }),
     db.vote.count({
       where: {
         implementationId: implementation.id,
-        type: 'DOWN',
+        type: "DOWN",
       },
     }),
   ]);
@@ -354,7 +354,8 @@ export async function getTrendingImplementations(limit = 10) {
         const baseScore = score * (1 + activityMultiplier);
         const totalVoteBonus = Math.log(impl._count.votes + 1) * 5; // Logarithmic bonus
 
-        const trendingScore = baseScore + totalVoteBonus + impl._count.comments * 2;
+        const trendingScore =
+          baseScore + totalVoteBonus + impl._count.comments * 2;
 
         return {
           ...impl,
@@ -588,33 +589,35 @@ export async function getStateOfTheArtByCategory() {
   });
 
   // Calculate net votes for all implementations
-  const implementationsWithVotes = implementations
-    .map((impl) => {
-      const upvotes = impl.votes.filter((v) => v.type === "UP").length;
-      const downvotes = impl.votes.filter((v) => v.type === "DOWN").length;
-      const netVotes = upvotes - downvotes;
+  const implementationsWithVotes = implementations.map((impl) => {
+    const upvotes = impl.votes.filter((v) => v.type === "UP").length;
+    const downvotes = impl.votes.filter((v) => v.type === "DOWN").length;
+    const netVotes = upvotes - downvotes;
 
-      return {
-        ...impl,
-        votes: undefined, // Remove votes array from response
-        netVotes,
-        upvotes,
-        downvotes,
-      };
-    });
+    return {
+      ...impl,
+      votes: undefined, // Remove votes array from response
+      netVotes,
+      upvotes,
+      downvotes,
+    };
+  });
 
   // Group by category and get only the top 1 (State of the Art) per category
-  const groupedByCategory = implementationsWithVotes.reduce((acc, impl) => {
-    const categoryName = impl.category.name;
-    if (!acc[categoryName]) {
-      acc[categoryName] = {
-        category: impl.category,
-        implementations: [],
-      };
-    }
-    acc[categoryName].implementations.push(impl);
-    return acc;
-  }, {} as Record<string, { category: any; implementations: any[] }>);
+  const groupedByCategory = implementationsWithVotes.reduce(
+    (acc, impl) => {
+      const categoryName = impl.category.name;
+      if (!acc[categoryName]) {
+        acc[categoryName] = {
+          category: impl.category,
+          implementations: [],
+        };
+      }
+      acc[categoryName].implementations.push(impl);
+      return acc;
+    },
+    {} as Record<string, { category: any; implementations: any[] }>,
+  );
 
   // Get only the top implementation per category (State of the Art)
   const result = Object.values(groupedByCategory)
@@ -623,9 +626,9 @@ export async function getStateOfTheArtByCategory() {
       implementations: group.implementations
         .sort((a, b) => b.netVotes - a.netVotes)
         .slice(0, 1) // Only take the #1 (State of the Art)
-        .filter(impl => impl.netVotes > 0) // Only include if it has positive votes
+        .filter((impl) => impl.netVotes > 0), // Only include if it has positive votes
     }))
-    .filter(group => group.implementations.length > 0); // Only include categories that have a winner
+    .filter((group) => group.implementations.length > 0); // Only include categories that have a winner
 
   // Sort categories by name
   return result.sort((a, b) => a.category.name.localeCompare(b.category.name));
@@ -681,22 +684,27 @@ export async function getStateOfTheArtFiltered(technologyNames: string[]) {
     .filter((impl) => impl.isStateOfTheArt);
 
   // Group by category
-  const groupedByCategory = stateOfTheArtImplementations.reduce((acc, impl) => {
-    const categoryName = impl.category.name;
-    if (!acc[categoryName]) {
-      acc[categoryName] = {
-        category: impl.category,
-        implementations: [],
-      };
-    }
-    acc[categoryName].implementations.push(impl);
-    return acc;
-  }, {} as Record<string, { category: any; implementations: any[] }>);
+  const groupedByCategory = stateOfTheArtImplementations.reduce(
+    (acc, impl) => {
+      const categoryName = impl.category.name;
+      if (!acc[categoryName]) {
+        acc[categoryName] = {
+          category: impl.category,
+          implementations: [],
+        };
+      }
+      acc[categoryName].implementations.push(impl);
+      return acc;
+    },
+    {} as Record<string, { category: any; implementations: any[] }>,
+  );
 
   // Convert to array
   const result = Object.values(groupedByCategory).map((group) => ({
     ...group,
-    implementations: group.implementations.sort((a, b) => b.netVotes - a.netVotes),
+    implementations: group.implementations.sort(
+      (a, b) => b.netVotes - a.netVotes,
+    ),
   }));
 
   // Sort categories by name

@@ -29,7 +29,12 @@ export function SearchContent({ initialQuery }: SearchContentProps) {
     setSearchTerm(urlQuery);
   }, [searchParams]);
 
-  const { data: searchResults, isLoading, isError, error } = useQuery({
+  const {
+    data: searchResults,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["search", query],
     queryFn: () => searchAllAPI(query),
     enabled: !!query,
@@ -111,7 +116,8 @@ export function SearchContent({ initialQuery }: SearchContentProps) {
             <Search className="mx-auto h-16 w-16 text-red-500 mb-6" />
             <h3 className="text-xl font-semibold mb-3">Search Error</h3>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Something went wrong while searching. Please try again or check your connection.
+              Something went wrong while searching. Please try again or check
+              your connection.
             </p>
             <Button
               onClick={() => {

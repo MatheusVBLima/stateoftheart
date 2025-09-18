@@ -15,10 +15,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Allow users to view their own implementations
     if (!currentUserId || currentUserId !== userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     const implementations = await getUserImplementations(userId);
@@ -27,7 +24,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     console.error("Error fetching user implementations:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

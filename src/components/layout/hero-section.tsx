@@ -3,8 +3,8 @@
 import { Search, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { Button } from "@/components/ui/button";
 import { Highlight } from "@/components/ui/hero-highlight";
 import { Input } from "@/components/ui/input";
 

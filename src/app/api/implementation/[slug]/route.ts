@@ -1,18 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getImplementationBySlug } from "@/lib/queries";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: { slug: string } },
 ) {
   try {
     const { slug } = await params;
 
     if (!slug) {
-      return NextResponse.json(
-        { error: "Slug is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
 
     const implementation = await getImplementationBySlug(slug);
@@ -20,7 +17,7 @@ export async function GET(
     if (!implementation) {
       return NextResponse.json(
         { error: "Implementation not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -29,7 +26,7 @@ export async function GET(
     console.error("Error fetching implementation:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

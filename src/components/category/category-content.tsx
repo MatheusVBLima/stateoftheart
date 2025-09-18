@@ -37,7 +37,7 @@ export function CategoryContent({ slug }: CategoryContentProps) {
 
   // Sort implementations by vote count (descending)
   const sortedImplementations = [...category.implementations].sort(
-    (a, b) => b._count.votes - a._count.votes
+    (a, b) => b._count.votes - a._count.votes,
   );
 
   const stateOfArt = sortedImplementations[0]; // Top voted implementation

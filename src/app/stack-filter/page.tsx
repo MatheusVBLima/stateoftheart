@@ -1,8 +1,8 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { StackFilterContent } from "@/components/stack-filter/stack-filter-content";
 import { Header } from "@/components/layout/header";
-import { getQueryClient } from "@/lib/query-client";
+import { StackFilterContent } from "@/components/stack-filter/stack-filter-content";
 import { getStateOfTheArtByCategory } from "@/lib/queries";
+import { getQueryClient } from "@/lib/query-client";
 
 export const metadata = {
   title: "Stack Filter - State Of The Art",

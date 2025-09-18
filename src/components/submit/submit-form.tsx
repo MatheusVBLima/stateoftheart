@@ -28,6 +28,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
   Select,
   SelectContent,
@@ -35,7 +36,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { createImplementationAction } from "@/lib/actions";
 import { getCategoriesAPI } from "@/lib/api";
 
@@ -289,7 +289,9 @@ export function SubmitForm() {
                     />
                   </FormControl>
                   <FormDescription>
-                    Write a detailed article explaining why this is the state-of-the-art implementation. You can use rich formatting, code blocks, lists, and more.
+                    Write a detailed article explaining why this is the
+                    state-of-the-art implementation. You can use rich
+                    formatting, code blocks, lists, and more.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

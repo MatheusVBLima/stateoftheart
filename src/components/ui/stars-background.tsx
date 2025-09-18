@@ -1,12 +1,13 @@
 "use client";
-import { cn } from "@/lib/utils";
-import React, {
-  useState,
+import type React from "react";
+import {
+  type RefObject,
+  useCallback,
   useEffect,
   useRef,
-  RefObject,
-  useCallback,
+  useState,
 } from "react";
+import { cn } from "@/lib/utils";
 
 interface StarProps {
   x: number;
@@ -62,7 +63,7 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
       twinkleProbability,
       minTwinkleSpeed,
       maxTwinkleSpeed,
-    ]
+    ],
   );
 
   useEffect(() => {

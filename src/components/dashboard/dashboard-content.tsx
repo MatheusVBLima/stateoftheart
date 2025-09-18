@@ -27,6 +27,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { renderTextWithCode } from "@/lib/text-renderer";
 
 interface DashboardContentProps {
   userId: string;
@@ -265,9 +266,9 @@ export function DashboardContent({ userId }: DashboardContentProps) {
                           {comment.implementation.category.name}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                        {comment.content}
-                      </p>
+                      <div className="text-sm text-muted-foreground mb-2 line-clamp-2 prose prose-gray dark:prose-invert max-w-none">
+                        {renderTextWithCode(comment.content)}
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         {formatDistanceToNow(new Date(comment.createdAt), {
                           addSuffix: true,
@@ -346,7 +347,7 @@ export function DashboardContent({ userId }: DashboardContentProps) {
                           <span className="text-sm text-muted-foreground">
                             {formatDistanceToNow(
                               new Date(implementation.createdAt),
-                              { addSuffix: true }
+                              { addSuffix: true },
                             )}
                           </span>
                         </div>
@@ -358,7 +359,9 @@ export function DashboardContent({ userId }: DashboardContentProps) {
                           </Link>
                         </Button>
                         <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/implementation/${implementation.slug}/edit`}>
+                          <Link
+                            href={`/implementation/${implementation.slug}/edit`}
+                          >
                             Edit
                           </Link>
                         </Button>
@@ -369,10 +372,12 @@ export function DashboardContent({ userId }: DashboardContentProps) {
               ) : (
                 <div className="text-center py-8">
                   <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <h4 className="text-lg font-medium mb-2">No submissions yet</h4>
+                  <h4 className="text-lg font-medium mb-2">
+                    No submissions yet
+                  </h4>
                   <p className="text-muted-foreground mb-4">
-                    Share your favorite state-of-the-art implementations with the
-                    community.
+                    Share your favorite state-of-the-art implementations with
+                    the community.
                   </p>
                   <Button asChild>
                     <Link href="/submit">

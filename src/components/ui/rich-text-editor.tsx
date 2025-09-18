@@ -1,22 +1,22 @@
 "use client";
 
-import { forwardRef, useImperativeHandle, useState } from "react";
 import { useCurrentEditor } from "@tiptap/react";
 import {
   Bold,
+  Code,
   Italic,
   List,
   ListOrdered,
-  Quote,
-  Code,
-  Type,
   Palette,
+  Quote,
+  Type,
 } from "lucide-react";
-import {
-  EditorProvider,
-  EditorBubbleMenu,
-} from "@/components/ui/kibo-ui/editor";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  EditorBubbleMenu,
+  EditorProvider,
+} from "@/components/ui/kibo-ui/editor";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
@@ -281,7 +281,7 @@ const EditorToolbar = () => {
 export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
   (
     { placeholder, value, onChange, className, disabled, limit = 1000 },
-    ref
+    ref,
   ) => {
     useImperativeHandle(ref, () => document.createElement("div"));
 
@@ -289,7 +289,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
       <div
         className={cn(
           "border rounded-md overflow-hidden bg-background",
-          className
+          className,
         )}
       >
         <EditorProvider
@@ -307,7 +307,10 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
           }}
           onTransaction={({ editor }) => {
             // Clear editor content when value prop is empty
-            if ((value === "" || value === undefined) && editor.getText().trim() !== "") {
+            if (
+              (value === "" || value === undefined) &&
+              editor.getText().trim() !== ""
+            ) {
               editor.commands.clearContent();
             }
           }}
@@ -330,7 +333,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
         </EditorProvider>
       </div>
     );
-  }
+  },
 );
 
 RichTextEditor.displayName = "RichTextEditor";

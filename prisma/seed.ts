@@ -724,7 +724,7 @@ function ContactForm() {
   const form = useForm({
     initialValues: { email: '', name: '' },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      email: (value) => (/^S+@S+$/.test(value) ? null : 'Invalid email'),
     },
   });
 
@@ -1315,8 +1315,8 @@ async function main() {
     categories.map((category) =>
       prisma.category.create({
         data: category,
-      })
-    )
+      }),
+    ),
   );
 
   console.log(`✅ Created ${createdCategories.length} categories`);
@@ -1325,7 +1325,7 @@ async function main() {
   const createdImplementations = await Promise.all(
     implementations.map(async (impl) => {
       const category = createdCategories.find(
-        (cat) => cat.slug === impl.categorySlug
+        (cat) => cat.slug === impl.categorySlug,
       );
       if (!category) {
         throw new Error(`Category not found: ${impl.categorySlug}`);
@@ -1339,7 +1339,7 @@ async function main() {
           userId: "seed_user", // Default user for seeded data
         },
       });
-    })
+    }),
   );
 
   console.log(`✅ Created ${createdImplementations.length} implementations`);
@@ -1382,7 +1382,7 @@ async function main() {
         "This is absolutely the best authentication solution I've used. The developer experience is incredible!",
       userId: "user_sample_1",
       implementationId: createdImplementations.find(
-        (i) => i.slug === "nextauth-js"
+        (i) => i.slug === "nextauth-js",
       )?.id,
     },
     {
@@ -1397,7 +1397,7 @@ async function main() {
         "TanStack Query makes managing server state so much easier. The caching is brilliant.",
       userId: "user_sample_3",
       implementationId: createdImplementations.find(
-        (i) => i.slug === "tanstack-query"
+        (i) => i.slug === "tanstack-query",
       )?.id,
     },
     {
@@ -1405,7 +1405,7 @@ async function main() {
         "shadcn/ui components are beautifully designed and so easy to customize. Love the copy-paste approach!",
       userId: "user_sample_4",
       implementationId: createdImplementations.find(
-        (i) => i.slug === "shadcn-ui"
+        (i) => i.slug === "shadcn-ui",
       )?.id,
     },
     {
@@ -1413,13 +1413,13 @@ async function main() {
         "Tailwind CSS has revolutionized my CSS workflow. Utility-first is the way to go.",
       userId: "user_sample_5",
       implementationId: createdImplementations.find(
-        (i) => i.slug === "tailwind-css"
+        (i) => i.slug === "tailwind-css",
       )?.id,
     },
   ];
 
   const comments = commentsData.filter(
-    (comment) => comment.implementationId !== undefined
+    (comment) => comment.implementationId !== undefined,
   ) as Array<{
     content: string;
     userId: string;

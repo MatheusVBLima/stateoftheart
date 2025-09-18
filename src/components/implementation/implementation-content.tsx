@@ -3,14 +3,19 @@
 import { useUser } from "@clerk/nextjs";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { Calendar, Edit, ExternalLink, Github, Tag, ThumbsUp, ThumbsDown } from "lucide-react";
+import {
+  Calendar,
+  Edit,
+  ExternalLink,
+  Github,
+  Tag,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-react";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { CommentsSection } from "@/components/comments/comments-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import {
   Card,
   CardContent,
@@ -18,8 +23,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { CustomBreadcrumb } from "@/components/ui/custom-breadcrumb";
 import { VotingButtons } from "@/components/voting/voting-buttons";
 import { getImplementationBySlug } from "@/lib/queries";
+import { renderTextWithCode } from "@/lib/text-renderer";
 
 interface ImplementationContentProps {
   slug: string;
@@ -52,8 +59,11 @@ export function ImplementationContent({ slug }: ImplementationContentProps) {
       <div className="mb-8">
         <CustomBreadcrumb
           items={[
-            { label: implementation.category.name, href: `/category/${implementation.category.slug}` },
-            { label: implementation.name }
+            {
+              label: implementation.category.name,
+              href: `/category/${implementation.category.slug}`,
+            },
+            { label: implementation.name },
           ]}
         />
       </div>
@@ -139,14 +149,13 @@ export function ImplementationContent({ slug }: ImplementationContentProps) {
                 <CardHeader>
                   <CardTitle>Why This Is State-of-the-Art</CardTitle>
                   <CardDescription>
-                    Detailed explanation from the community about what makes this implementation special
+                    Detailed explanation from the community about what makes
+                    this implementation special
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-gray dark:prose-invert max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {implementation.content}
-                    </ReactMarkdown>
+                    {renderTextWithCode(implementation.content)}
                   </div>
                 </CardContent>
               </Card>
@@ -178,16 +187,22 @@ export function ImplementationContent({ slug }: ImplementationContentProps) {
                 <div className="text-2xl font-bold text-primary">
                   {implementation._count.votes}
                 </div>
-                <div className="text-sm text-muted-foreground">popularity score</div>
+                <div className="text-sm text-muted-foreground">
+                  popularity score
+                </div>
 
                 <div className="flex items-center justify-center space-x-4 text-sm">
                   <div className="flex items-center space-x-1 text-green-600">
                     <ThumbsUp className="h-4 w-4" />
-                    <span className="font-medium">{implementation.upvotes}</span>
+                    <span className="font-medium">
+                      {implementation.upvotes}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-1 text-red-600">
                     <ThumbsDown className="h-4 w-4" />
-                    <span className="font-medium">{implementation.downvotes}</span>
+                    <span className="font-medium">
+                      {implementation.downvotes}
+                    </span>
                   </div>
                 </div>
               </div>

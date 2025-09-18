@@ -70,9 +70,8 @@ export async function createCommentAPI(data: CreateCommentData) {
 }
 
 export async function getStackFilterDataAPI(technologies: string[] = []) {
-  const params = technologies.length > 0
-    ? `?technologies=${technologies.join(",")}`
-    : "";
+  const params =
+    technologies.length > 0 ? `?technologies=${technologies.join(",")}` : "";
 
   const response = await fetch(`/api/stack-filter${params}`);
   if (!response.ok) {

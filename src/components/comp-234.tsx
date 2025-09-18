@@ -1,7 +1,7 @@
-import { useId } from "react"
+import { useId } from "react";
 
-import { Label } from "@/components/ui/label"
-import MultipleSelector, { Option } from "@/components/ui/multiselect"
+import { Label } from "@/components/ui/label";
+import MultipleSelector, { type Option } from "@/components/ui/multiselect";
 
 const frameworks: Option[] = [
   {
@@ -70,10 +70,10 @@ const frameworks: Option[] = [
     value: "lit",
     label: "Lit",
   },
-]
+];
 
 export default function Component() {
-  const id = useId()
+  const id = useId();
   return (
     <div className="*:not-first:mt-2">
       <Label>Multiselect</Label>
@@ -104,5 +104,5 @@ export default function Component() {
         </a>
       </p>
     </div>
-  )
+  );
 }
